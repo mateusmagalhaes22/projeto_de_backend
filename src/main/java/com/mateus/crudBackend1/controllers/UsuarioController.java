@@ -1,7 +1,5 @@
 package com.mateus.crudBackend1.controllers;
 
-
-import com.mateus.crudBackend1.Dto.UsuarioDto;
 import com.mateus.crudBackend1.models.Usuario;
 import com.mateus.crudBackend1.services.UsuarioService;
 import lombok.RequiredArgsConstructor;
@@ -12,35 +10,30 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/usuarios")
 @RequiredArgsConstructor
-@RequestMapping(path = "/usuarios")
 public class UsuarioController {
 
-    private final UsuarioService service;
+    private final UsuarioService usuarioService;
 
-    @GetMapping()
-    public ResponseEntity<List<Usuario>> getAllUsuarios(){
-        return new ResponseEntity<>(service.getAllUsuarios(), HttpStatus.OK);
+    @PostMapping
+    public ResponseEntity<Usuario> criarUsuario(@RequestBody Usuario usuario) {
+        return new ResponseEntity<>(usuarioService.salvar(usuario), HttpStatus.CREATED);
     }
 
-    @GetMapping(path = "/{id}")
-    public ResponseEntity<Usuario> getUsuarioById(@PathVariable int id){
-        return new ResponseEntity<>(service.getUsuarioById(id), HttpStatus.OK);
+    @GetMapping("/{id}")
+    public ResponseEntity<Usuario> buscarPorId(@PathVariable int id) {
+        return new ResponseEntity<>(usuarioService.buscarPorId(id), HttpStatus.OK);
     }
 
-    @PostMapping()
-    public ResponseEntity<UsuarioDto> postUsuario(@RequestBody Usuario usuario){
-        return new ResponseEntity<>(service.postUsuario(usuario), HttpStatus.CREATED);
+    @GetMapping
+    public ResponseEntity<Iterable<Usuario>> listarTodos() {
+        return new ResponseEntity<>(usuarioService.listarTodos(), HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "/{id}")
-    public ResponseEntity<UsuarioDto> deleteUsuario(@PathVariable int id){
-        return new ResponseEntity<>(service.deleteUsuario(id), HttpStatus.OK);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable int id) {
+        usuarioService.deletar(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
-
-    @PutMapping(path = "/{id}")
-    public ResponseEntity<UsuarioDto> updateUsuario(@PathVariable int id, @RequestBody Usuario usuario){
-        return new ResponseEntity<>(service.updateUsuario(id, usuario), HttpStatus.ACCEPTED);
-    }
-
 }

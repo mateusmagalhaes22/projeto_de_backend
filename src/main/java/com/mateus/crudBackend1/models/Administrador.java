@@ -2,20 +2,16 @@ package com.mateus.crudBackend1.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
-public class Usuario {
+public class Administrador {
     @Id
-    private int id;
-    private String name;
+    private String matricula;
+    private String nome;
     private String email;
-    @OneToMany
-    private List<Cartao> cartoes;
+    private boolean ativo;
 }

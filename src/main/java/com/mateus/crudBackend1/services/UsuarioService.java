@@ -1,56 +1,31 @@
 package com.mateus.crudBackend1.services;
 
-import com.mateus.crudBackend1.Dto.UsuarioDto;
 import com.mateus.crudBackend1.models.Usuario;
-import com.mateus.crudBackend1.repositories.UsuarioRepository;
+import com.mateus.crudBackend1.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UsuarioService {
 
-    private final UsuarioRepository repository;
+    private final UsuarioRepository usuarioRepository;
 
-    public List<Usuario> getAllUsuarios(){
-        return repository.findAll();
+    public Usuario salvar(Usuario usuario) {
+        return usuarioRepository.save(usuario);
     }
 
-    public UsuarioDto postUsuario(Usuario usuario){
-        return new UsuarioDto(repository.save(usuario));
+    public Usuario buscarPorId(int id) {
+        return usuarioRepository.findById(id).orElse(null);
     }
 
-    public Usuario getUsuarioById(int id){
-        Optional<Usuario> usuarioOptional = repository.findById(id);
-        return usuarioOptional.orElse(null);
+    public Iterable<Usuario> listarTodos() {
+        return usuarioRepository.findAll();
     }
 
-    public UsuarioDto updateUsuario(int id, Usuario usuarioAtualizado){
-        Optional<Usuario> usuarioOptional = repository.findById(id);
-        if (usuarioOptional.isPresent()){
-            Usuario usuario = usuarioOptional.get();
-            usuario.setCpf(usuarioAtualizado.getCpf());
-            usuario.setNome(usuarioAtualizado.getNome());
-            usuario.setEmail(usuarioAtualizado.getEmail());
-            usuario.setIdade(usuarioAtualizado.getIdade());
-
-            return new UsuarioDto(repository.save(usuario));
-        } else {
-            throw new NoSuchElementException();
-        }
-    }
-
-    public UsuarioDto deleteUsuario(int id) {
-        Optional<Usuario> usuarioOptional = repository.findById(id);
-        repository.deleteById(id);
-        if (usuarioOptional.isPresent()) {
-            return new UsuarioDto(usuarioOptional.get());
-        } else {
-            throw new NoSuchElementException();
-        }
+    public void deletar(int id) {
+        usuarioRepository.deleteById(id);
     }
 }
